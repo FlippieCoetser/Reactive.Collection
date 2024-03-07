@@ -1,5 +1,9 @@
 import { Collection, iCollection } from "../src/collection.js";
-import { Actor } from "../src/T.js";
+
+export type Actor = {
+  id: number;
+  name: string;
+};
 
 describe("Given Actors imported", () => {
   it("then Actors should be defined", () => {
