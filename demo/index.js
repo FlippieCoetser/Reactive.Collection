@@ -1,3 +1,14 @@
-import { Calculator } from 'calculator';
-console.log(`Import module: Calculator`)
-console.log(`Use module: 1 + 2 = ${Calculator.Add(1, 2)}`); 
+import { Collection } from "collection";
+
+let actors = Collection.create([
+  { id: 1, name: "Actor 1" },
+  { id: 2, name: "Actor 2" },
+]);
+
+console.log(actors);
+
+actors.addEventListener("onadd", (event) => {
+  console.log(event.detail.collection);
+});
+
+actors.add({ id: 3, name: "Actor 3" });
