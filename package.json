@@ -1,6 +1,6 @@
 {
   "name": "@browser-modules/reactive.collection",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Reactive Collection, including event management, for the browser using ES6 modules.",
   "browser": "lib/collection.js",
   "files": [
@@ -15,7 +15,7 @@
     "test": "karma start",
     "posttest": "npm run clean.test",
     "build.lib": "npm run clean.lib && tsc -p build.lib.json",
-    "document": "npx typedoc --tsconfig build.test.json --entryPoints ./src/collection.ts",
+    "document": "npx typedoc --tsconfig build.test.json",
     "prestart": "npm run build.lib",
     "start": "http-server -a 127.0.0.1 -o /demo",
     "postinstall": "node ./tasks/injectImportmap.mjs"

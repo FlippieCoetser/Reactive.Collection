@@ -9,6 +9,7 @@
   },
   "include": ["./src/**/*", "./test/**/*"],
   "typedocOptions": {
+    "entryPoints": ["./src/*.ts"],
     "excludePrivate": true,
     "excludeProtected": true,
     "disableSources": true,

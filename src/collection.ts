@@ -58,8 +58,6 @@ export class Collection<T> extends EventTarget {
             return this.addEventListener.bind(this);
           case "removeEventListener":
             return this.removeEventListener.bind(this);
-          case "dispatchEvent":
-            return this.dispatchEvent.bind(this);
           default:
             return Reflect.get(target, property);
         }
