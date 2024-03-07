@@ -1,7 +1,7 @@
 {
   "name": "@browser-modules/reactive.collection",
-  "version": "1.0.2",
-  "description": "Reactive Collection, including event management, for the browser using ES6 modules.",
+  "version": "1.0.0",
+  "description": "An ES6 module providing a reactive array-like collection with event emission for additions, updates, and removals, ideal for dynamic UI updates and data-driven applications.",
   "browser": "lib/collection.js",
   "files": [
     "lib/",

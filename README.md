@@ -1,35 +1,32 @@
 # Reactive Collection
 
-Create an array what will emit events when it is modified. This is useful for creating a reactive array that can be used in a reactive context.
+Enhance your data arrays with reactivity. The Reactive Collection library enables arrays to emit events upon modifications, making it indispensable for developing dynamic, data-driven applications. Perfect for integrating with UI frameworks or any scenario requiring real-time data synchronization.
 
-### Why use this library?
+## Why This Library?
 
-This library can be used to create a reactive array that will emit events when the data changes. In doing so, logic can be added to the event handlers to update, for example, the UI when the data changes.
+The Reactive Collection provides a seamless way to observe changes in your data, emitting events on additions, updates, and removals. This functionality is particularly beneficial for visual data representations that need to update automatically, such as with D3 visualizations, without manual refreshes or polling.
 
-For example, a D3 Data Visualization does not update when the data changes. This is because D3 does not have a way to listen for changes in the data, it only concerns it self with updating the UI based on the data it is provided during invocation. This library can be used to create a reactive array that will emit events when the data changes. By binding D3 update logic to these events, Data Visualization updates automatically.
+## Features
 
-## API
+- **Reactive Operations**: Perform standard array operations while automatically emitting events for changes.
+- **Custom Methods**: Utilize enhanced methods like `.add()` and `.remove()` for clearer, more expressive code.
+- **Unique Identification**: Every collection comes with a unique identifier, simplifying tracking across your application.
+- **Event-Driven**: Listen to `onadd`, `onupdate`, and `onremove` events to easily sync your UI or other components with your data.
 
-Operations:
+## Getting Started
 
-- Add an item to the array via standard array methods: `.push(<item>)`
-- Add an item to the array via custom method: `.add(<item>)`
-- Update an item: `collection[<index>] = <item>`
-- Remove an item from the array via standard array methods: `.pop()`
-- Remove an item from the array via custom method: `.remove(<item>)`
+### Installation
 
-Events:
+```bash
+npm install @browser-modules/reactive.collection
+```
 
-- `onadd`: Emitted when an item is added to the array
-- `onupdate`: Emitted when an item is updated in the array
-- `onremove`: Emitted when an item is removed from the array
+### Quick Start
 
-## Example
-
-1. Create a collection of actors.
+1. Create a Collection
 
 ```javascript
-import { Collection } from "collection";
+import { Collection } from "@browser-modules/reactive.collection";
 
 let actors = Collection.create([
   { id: 1, name: "Actor 1" },
@@ -37,29 +34,33 @@ let actors = Collection.create([
 ]);
 ```
 
-2. Define an generic event handler
+2. Set Up Event Handlers
 
 ```javascript
-let eventHandler = (event) => {
-  // Direct access to Reactive Collections
-  let actors = event.detail.collection;
+let onAddition = (event) => {
+  // Access the updated collection directly in the event
+  console.log(event.detail.collection);
 };
 ```
 
-3. Add event listeners
+3. Listen to Events
 
 ```javascript
-actors.addEventListener("onadd", eventHandler);
+actors.addEventListener("onadd", onAddition);
 ```
 
-4. Add an actor to the collection
+4. Modify the Collection
 
 ```javascript
 actors.add({ id: 3, name: "Actor 3" });
 ```
 
-5. Remove event listeners
+5. Observe the Output
+
+check the console for the updated collection
+
+4. Clean Up
 
 ```javascript
-actors.removeEventListener("onadd", eventHandler);
+actors.removeEventListener("onadd", onAddition);
 ```
