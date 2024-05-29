@@ -44,5 +44,8 @@
     "typedoc-plugin-merge-modules": "^5.1.0",
     "typedoc-plugin-mermaid": "^1.10.0",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@browser-modules/reactive.collection": "^1.0.0"
   }
 }

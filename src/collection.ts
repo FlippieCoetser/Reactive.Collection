@@ -1,3 +1,4 @@
+export type UUID = string;
 interface CollectionEventDetail<T> {
   collection: iCollection<T>;
 }
@@ -23,13 +24,8 @@ export type iCollection<T> = T[] & {
 };
 
 export class Collection<T> extends EventTarget {
-  private static get UUID(): string {
-    const array = new Uint8Array(16);
-    window.crypto.getRandomValues(array);
-    const uuid = Array.from(array, (byte) =>
-      byte.toString(16).padStart(2, "0")
-    ).join("");
-    return uuid;
+  private static get UUID(): UUID {
+    return crypto.randomUUID();
   }
   public static create<T>(array: T[] = []): iCollection<T> {
     let instance = new Collection(array);
@@ -39,53 +35,51 @@ export class Collection<T> extends EventTarget {
   public id: string;
 
   private proxy: iCollection<T>;
+  private handlers: { [key: string | symbol]: (() => any) | string };
 
   private constructor(private array: T[]) {
     super();
     this.id = Collection.UUID;
+    this.initializeHandlers();
     this.proxy = new Proxy(array, {
-      get: (target, property) => {
-        switch (property) {
-          case "id":
-            return this.id;
-          case "add":
-            return this.add.bind(this);
-          case "remove":
-            return this.remove.bind(this);
-          case "pop":
-            return this.pop.bind(this);
-          case "addEventListener":
-            return this.addEventListener.bind(this);
-          case "removeEventListener":
-            return this.removeEventListener.bind(this);
-          default:
-            return Reflect.get(target, property);
-        }
-      },
-      set: (target, property, value) => {
-        const index = Number(property);
-
-        let isAddition = false;
-
-        if (!isNaN(index) && isFinite(index)) {
-          isAddition = index >= target.length;
-
-          Reflect.set(target, property, value);
-
-          if (isAddition) {
-            this.onadd();
-          } else {
-            this.onupdate();
-          }
-
-          return true;
-        } else {
-          Reflect.set(target, property, value);
-          return true;
-        }
-      },
+      get: this._get,
+      set: this._set,
     }) as iCollection<T>;
   }
+
+  private _get = (target, property) =>
+    this.handlers[property]
+      ? this.handlers[property]
+      : Reflect.get(target, property);
+
+  private _set = (target, property, value) =>
+    typeof property !== "symbol" &&
+    Number.isInteger(+property) &&
+    +property >= 0
+      ? this._setIndex(target, property, value)
+      : Reflect.set(target, property, value);
+
+  private _setIndex = (target, index, value) =>
+    +index >= target.length
+      ? this._add(target, index, value)
+      : this._update(target, index, value);
+
+  private _add = (target, property, value) =>
+    Reflect.set(target, property, value) ? (this.onadd(), true) : false;
+
+  private _update = (target, property, value) =>
+    Reflect.set(target, property, value) ? (this.onupdate(), true) : false;
+
+  private initializeHandlers = () => {
+    this.handlers = {
+      id: this.id,
+      add: this.add.bind(this),
+      remove: this.remove.bind(this),
+      pop: this.pop.bind(this),
+      addEventListener: this.addEventListener.bind(this),
+      removeEventListener: this.removeEventListener.bind(this),
+    };
+  };
 
   private onadd = (): boolean =>
     this.dispatchEvent(
